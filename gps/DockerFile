@@ -1,0 +1,3 @@
+FROM openjdk:11-jdk
+COPY build/libs/*.jar gps.jar
+ENTRYPOINT ["java","-jar","/gps.jar","-Duser.country=EU -Duser.language=gt"]

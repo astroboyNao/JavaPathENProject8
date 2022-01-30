@@ -1,10 +1,17 @@
 
+def mapstructVersion =  "1.5.0.Beta2"
+def lombokVersion =  "1.18.20"
+def lombokMapstructBindingVersion =  "0.2.0"
+
 buildscript {
     repositories {
         mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.6.0")
     }
 }
 
@@ -14,32 +21,65 @@ repositories {
         dirs 'libs'
     }
 }
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "jacoco"
 
+
 bootJar {
+}
+jar {
+    enabled = true
+}
+bootRun{
 
 }
-
-
+build {}
 sourceCompatibility = 11
 targetCompatibility = 11
 
 configurations {
     externalLibs
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
+group = 'com.tripmaster.gps'
+version = '0.0.1-SNAPSHOT'
 
-dependencies {
+ dependencies {
     implementation files('libs/gpsUtil.jar')
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.projectreactor:reactor-test'
+
+    implementation  'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation "org.springframework.boot:spring-boot-starter-security"
+
+
+     testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.2.RELEASE') {
+         exclude group: 'junit'
+         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+     }
+
+     testImplementation('org.springframework.security:spring-security-test')
+     testImplementation 'io.projectreactor:reactor-test'
+     testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+     testImplementation('org.junit.jupiter:junit-jupiter-engine:5.3.2')
+     testImplementation('org.junit.jupiter:junit-jupiter-params:5.3.2')
+     testImplementation 'org.springframework.boot:spring-boot-starter-web'
+     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+     compileOnly 'org.projectlombok:lombok'
+     annotationProcessor 'org.projectlombok:lombok'
+
+     implementation  "org.mapstruct:mapstruct:${mapstructVersion}",  "org.projectlombok:lombok:${lombokVersion}"
+     annotationProcessor  "org.mapstruct:mapstruct-processor:${mapstructVersion}",  "org.projectlombok:lombok:${lombokVersion}",  "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
 
 }
 
@@ -50,13 +90,22 @@ test {
 
 jacoco {
     toolVersion = "0.8.4"
+
 }
 
 jacocoTestReport {
+
     reports {
-        xml.enabled true
+        xml.enabled false
         csv.enabled false
-        html.destination file("${buildDir}/jacocoHtml")
+        html.enabled true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'com/tripmaster/gps/config/**',
+                    'com/tripmaster/gps/GpsApplication.java'])
+        }))
     }
 }
 
@@ -64,6 +113,13 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 jacocoTestCoverageVerification {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'com/tripmaster/gps/config/**',
+                    'com/tripmaster/gps/GpsApplication.java'])
+        }))
+    }
     violationRules {
         rule {
             limit {
