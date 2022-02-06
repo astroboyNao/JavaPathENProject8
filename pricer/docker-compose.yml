@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  oc-pricer-container:
+    image: oc-pricer:1
+    build:
+      context: ./
+      dockerfile: DockerFile
+    volumes:
+      - /data/pricer
+    ports:
+      - "8070:8070"

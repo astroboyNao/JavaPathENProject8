@@ -1,0 +1,3 @@
+FROM openjdk:11-jdk
+COPY build/libs/*.jar pricer.jar
+ENTRYPOINT ["java","-jar","/pricer.jar","-Duser.country=EU -Duser.language=gt"]
