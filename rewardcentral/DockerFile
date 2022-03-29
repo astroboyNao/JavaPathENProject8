@@ -1,0 +1,3 @@
+FROM openjdk:11-jdk
+COPY build/libs/*.jar rewardcentral.jar
+ENTRYPOINT ["java","-jar","/rewardcentral.jar","-Duser.country=EU -Duser.language=gt"]

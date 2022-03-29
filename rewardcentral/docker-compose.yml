@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  oc-gps-container:
+    image: oc-rewardcentral:3
+    build:
+      context: ./
+      dockerfile: DockerFile
+    volumes:
+      - /data/rewardcentral
+    ports:
+      - "8090-8150:8090"
