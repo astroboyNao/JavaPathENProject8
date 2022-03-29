@@ -2,11 +2,11 @@ version: '3'
 
 services:
   oc-gps-container:
-    image: oc-gps:3
+    image: oc-gps:4
     build:
       context: ./
       dockerfile: DockerFile
     volumes:
       - /data/gps
     ports:
-      - "8081:8081"
+      - "8060-8069:8060"
