@@ -3,6 +3,7 @@ def mapstructVersion =  "1.5.0.Beta2"
 def lombokVersion =  "1.18.20"
 def lombokMapstructBindingVersion =  "0.2.0"
 
+
 buildscript {
     repositories {
         mavenCentral()
@@ -11,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.6.0")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.6.1")
     }
 }
 
@@ -28,6 +29,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "jacoco"
 
+sourceSets.main.java.srcDirs = ['build/generated/sources/annotationProcessor/java/main','src/main/java']
 
 bootJar {
 }
@@ -47,7 +49,11 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
-
+compileJava {
+    options.compilerArgs = [
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
+}
 group = 'com.tripmaster.tourguide'
 version = '0.0.1-SNAPSHOT'
 
@@ -58,8 +64,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation 'org.apache.commons:commons-lang3:3.6'
 
-implementation "org.javamoney:moneta:1.3"
+    implementation "org.javamoney:moneta:1.3"
+    implementation 'com.google.guava:guava:11.0.2'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.2.RELEASE') {
         exclude group: 'junit'
@@ -73,10 +81,14 @@ implementation "org.javamoney:moneta:1.3"
     testImplementation('org.junit.jupiter:junit-jupiter-params:5.3.2')
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.1'
+    testImplementation 'com.squareup.okhttp3:okhttp:4.9.1'
 
     compileOnly 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     annotationProcessor 'org.projectlombok:lombok'
-
+    compileOnly 'org.mapstruct:mapstruct'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     implementation  "org.mapstruct:mapstruct:${mapstructVersion}",  "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor  "org.mapstruct:mapstruct-processor:${mapstructVersion}",  "org.projectlombok:lombok:${lombokVersion}",  "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
@@ -85,11 +97,12 @@ implementation "org.javamoney:moneta:1.3"
 
 test {
     useJUnitPlatform()
+
 }
 
 
 jacoco {
-    toolVersion = "0.8.4"
+    toolVersion = "0.8.6"
 
 }
 
@@ -103,21 +116,23 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    'com/tripmaster/pricer/config/**',
-                    'com/tripmaster/pricer/PricerApplication.java'])
+                    'com/tourguide/application/*.*',
+                    'com/tourguide/infrastructure/entities/**',
+                    'com/tourguide/infrastructure/mapper/**',
+                    'com/tourguide/infrastructure/config/'])
         }))
     }
 }
 
-test.finalizedBy jacocoTestReport
-check.dependsOn jacocoTestCoverageVerification
 
 jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    'com/tripmaster/pricer/config/**',
-                    'com/tripmaster/pricer/PricerApplication.java'])
+                    'com/tourguide/application/*.*',
+                    'com/tourguide/infrastructure/entities/**',
+                    'com/tourguide/infrastructure/mapper/**',
+                    'com/tourguide/infrastructure/config/'])
         }))
     }
     violationRules {
@@ -130,7 +145,3 @@ jacocoTestCoverageVerification {
         }
     }
 }
-/**
- rapport surfire
- couverture jacocoo50
- **/
