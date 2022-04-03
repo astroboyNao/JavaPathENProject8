@@ -1,6 +1,6 @@
 package com.tourguide.infrastructure.repositories;
 
-import com.tourguide.domain.Provider;
+import com.tourguide.infrastructure.entities.Provider;
 import com.tourguide.infrastructure.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +34,6 @@ public class PricerRepositoryImpl implements PricerRepository {
                         .queryParam("rewardsPoints", cumulatativeRewardPoints)
                         .build())
                 .retrieve()
-                .bodyToFlux(Provider.class).timeout(Duration.ofMinutes(1)).retry();
+                .bodyToFlux(Provider.class);
     }
 }

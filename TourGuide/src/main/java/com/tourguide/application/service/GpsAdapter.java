@@ -39,11 +39,8 @@ public class GpsAdapter implements Gps {
 
     @Override
     public Flux<Attraction> getAttractions() {
-        if(attractionCache ==null) {
-            attractionCache = gpsRepository.getAttractions().collectList().block().stream().map(
-                    attraction -> attractionMapper.toAttractionDomain(attraction)).collect(Collectors.toList());
-        }
-        return Flux.fromStream(attractionCache.stream());
+        return gpsRepository.getAttractions()
+                .map(attraction -> attractionMapper.toAttractionDomain(attraction));
     }
 
 }

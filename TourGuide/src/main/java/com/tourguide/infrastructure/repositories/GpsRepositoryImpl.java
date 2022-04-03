@@ -43,9 +43,6 @@ public class GpsRepositoryImpl implements GpsRepository {
     }
 
     public Flux<Attraction> getAttractions() {
-        if(attractionCache ==null) {
-            attractionCache = client.get().uri("attractions").retrieve().bodyToFlux(Attraction.class).collectList().block();
-        }
         return Flux.fromStream(attractionCache.stream());
     }
 }

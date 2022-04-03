@@ -15,9 +15,9 @@ import java.util.UUID;
 public class GpsService {
     private GpsUtil gpsUtil;
 
-    public Mono<VisitedLocation> getUserLocation(UUID userId) {
+        public Mono<VisitedLocation> getUserLocation(UUID userId) {
 
-        return Mono.just(gpsUtil.getUserLocation(userId));
+            return Mono.just(gpsUtil.getUserLocation(userId));
     }
 
     public Flux<Attraction> getAttractions() {

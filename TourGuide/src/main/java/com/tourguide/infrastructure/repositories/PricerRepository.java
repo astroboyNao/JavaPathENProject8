@@ -1,6 +1,6 @@
 package com.tourguide.infrastructure.repositories;
 
-import com.tourguide.domain.Provider;
+import com.tourguide.infrastructure.entities.Provider;
 import com.tourguide.infrastructure.entities.User;
 import reactor.core.publisher.Flux;
 

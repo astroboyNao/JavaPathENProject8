@@ -3,6 +3,7 @@ package com.tourguide.infrastructure.controller;
 
 import com.tourguide.infrastructure.entities.*;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ public class TourGuideController {
      * @param userName the user name
      * @return the location
      */
-    @RequestMapping("/getLocation")
+    @GetMapping("/getLocation")
     public Mono<VisitedLocation> getLocation(@RequestParam String userName) {
         return tourGuideAdapter.getUserLocation(userName);
     }
@@ -48,7 +49,7 @@ public class TourGuideController {
     // The distance in miles, en km between the user's location and each of the attractions.
     // The reward points for visiting each Attraction.
     //    Note: Attraction reward points can be gathered from RewardsCentral
-    @RequestMapping("/getNearbyAttractions")
+    @GetMapping("/getNearbyAttractions")
     public Flux<Attraction> getNearbyAttractions(@RequestParam String userName) {
         return tourGuideAdapter.getNearByAttractions(userName);
     }
@@ -59,7 +60,7 @@ public class TourGuideController {
      * @param userName the user name
      * @return the rewards
      */
-    @RequestMapping("/getRewards")
+    @GetMapping("/getRewards")
     public Flux<Reward> getRewards(@RequestParam String userName) {
         return tourGuideAdapter.getUserRewards(userName);
     }
@@ -69,8 +70,8 @@ public class TourGuideController {
      *
      * @return the all current locations
      */
-    @RequestMapping("/getAllCurrentLocations")
-    public Flux<Location> getAllCurrentLocations() {
+    @GetMapping("/getAllCurrentLocations")
+    public Flux<UserVisitedLocation> getAllCurrentLocations() {
         return tourGuideAdapter.getAllCurrentLocation();
     }
 
@@ -80,7 +81,7 @@ public class TourGuideController {
      * @param userName the user name
      * @return the trip deals
      */
-    @RequestMapping("/getTripDeals")
+    @GetMapping("/getTripDeals")
     public Flux<Provider> getTripDeals(@RequestParam String userName) {
         return tourGuideAdapter.getTripDeals(userName);
     }

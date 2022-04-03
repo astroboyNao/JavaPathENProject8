@@ -1,6 +1,7 @@
 package com.tourguide.application.service;
 
 import com.tourguide.infrastructure.entities.Location;
+import com.tourguide.infrastructure.entities.Preferences;
 import com.tourguide.infrastructure.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 /**
@@ -55,6 +57,11 @@ public class UserService {
                     .userName(userName)
                     .phoneNumber(phone)
                     .emailAddress(email)
+                    .userPreferences(Preferences.builder()
+                            .numberOfAdults(ThreadLocalRandom.current().nextInt(8))
+                            .numberOfChildren(ThreadLocalRandom.current().nextInt(8))
+                            .tripDuration(ThreadLocalRandom.current().nextInt(8))
+                            .build())
                     .visitedLocations(generateUserLocationHistory())
                     .build();
 

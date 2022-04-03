@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
+
+import java.util.UUID;
+
 @Data
 @Builder
 @AllArgsConstructor
 @Jacksonized
 public class Provider {
-    public final String name;
-    public final double price;
-
+    private UUID tripId;
+    private String name;
+    private double price;
 }

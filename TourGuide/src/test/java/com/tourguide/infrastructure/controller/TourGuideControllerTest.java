@@ -4,6 +4,7 @@ import com.tourguide.application.Application;
 import com.tourguide.application.service.TourGuideAdapter;
 import com.tourguide.domain.*;
 import com.tourguide.infrastructure.config.ApplicationConfig;
+import com.tourguide.infrastructure.entities.*;
 import com.tourguide.infrastructure.entities.Attraction;
 import com.tourguide.infrastructure.entities.Location;
 import com.tourguide.infrastructure.entities.Provider;
@@ -46,6 +47,8 @@ public class TourGuideControllerTest {
     @MockBean
     TourGuideAdapter tourGuideAdapter;
 
+    @MockBean
+    AttractionMapper attractionMapper;
 
     @Test
     public void getLocation() {
@@ -86,7 +89,7 @@ public class TourGuideControllerTest {
 
     @Test
     public void getAllCurrentLocations() {
-        Mockito.when(tourGuideAdapter.getAllCurrentLocation()).thenReturn(Flux.just(Location.builder().build()));
+        Mockito.when(tourGuideAdapter.getAllCurrentLocation()).thenReturn(Flux.just(UserVisitedLocation.builder().build()));
 
         webClient.get()
                 .uri("/getAllCurrentLocations")

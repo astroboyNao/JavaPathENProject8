@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import com.tourguide.infrastructure.repositories.UserRepository;
+import reactor.util.function.Tuples;
 
 import java.util.List;
 
@@ -92,11 +93,12 @@ public class TourGuideAdapter {
                 .doOnNext(userTracked -> userRepository.save(userMapper.toUserEntities(userTracked)));
     }
 
-    public Flux<Location> getAllCurrentLocation(){
+    public Flux<UserVisitedLocation> getAllCurrentLocation(){
         return Flux.fromStream(userRepository.findAll().stream())
-                .map(user -> userMapper.toUserDomain(user))
-                .flatMap(user -> tourGuide.getUserLocation(user))
-                .map(visitedLocationMapper::toVisitedLocation)
-                .map(VisitedLocation::getLocation);
+                .map(user -> Tuples.of(tourGuide.getUserLocation(userMapper.toUserDomain(user)), user))
+                .flatMap(objects -> objects.getT1().map(visitedLocation -> {
+                    var vLocation = visitedLocationMapper.toVisitedLocation(visitedLocation);
+                    return UserVisitedLocation.builder().userId(objects.getT2().getUserId()).location(vLocation.getLocation()).build();
+                }));
     }
 }

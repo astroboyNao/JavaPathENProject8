@@ -1,7 +1,8 @@
 package com.tourguide.application.service;
 
-import com.tourguide.domain.Provider;
+import com.tourguide.infrastructure.entities.Provider;
 import com.tourguide.infrastructure.entities.User;
+import com.tourguide.infrastructure.mapper.ProviderMapper;
 import com.tourguide.infrastructure.repositories.PricerRepository;
 import com.tourguide.infrastructure.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,8 @@ public class PricerAdapterTest {
     UserRepository userRepository;
     @Mock
     PricerRepository pricerRepository;
+    @Mock
+    ProviderMapper providerMapper;
     @InjectMocks
     PricerAdapter pricerAdapter;
 
@@ -32,12 +35,12 @@ public class PricerAdapterTest {
         User user = User.builder().userName("userName").build();
         com.tourguide.domain.User userDomain = com.tourguide.domain.User.builder().userName("userName").build();
         Provider provider= Provider.builder().name("providerName").build();
-
+        com.tourguide.domain.Provider providerDomain= com.tourguide.domain.Provider.builder().name("providerName").build();
         Mockito.when(userRepository.get(user.getUserName())).thenReturn(Mono.just(user));
         Mockito.when(pricerRepository.getPriceForUser("test-server-api-key", user, 1)).thenReturn(Flux.just(provider));
-
+        Mockito.when(providerMapper.toProviderDomain(provider)).thenReturn(providerDomain);
         StepVerifier.create(pricerAdapter.getPrice(userDomain, 1))
-                .expectNext(provider).expectComplete().verify();
+                .expectNext(providerDomain).expectComplete().verify();
     }
 
 }
