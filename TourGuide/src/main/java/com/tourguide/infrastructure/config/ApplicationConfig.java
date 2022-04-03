@@ -52,7 +52,6 @@ public class ApplicationConfig {
                 ));
         return WebClient.builder().baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                //.clientConnector(new ReactorClientHttpConnector())
                 .filter(ExchangeFilterFunctions.basicAuthentication(USER, PASSWORD))
                 .build();
     }

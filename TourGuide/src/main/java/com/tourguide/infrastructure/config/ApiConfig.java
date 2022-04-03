@@ -13,13 +13,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @RequiredArgsConstructor
-public class SwaggerConfig {
+public class ApiConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
                         .description("Service API")
-                        .title("GPS")
+                        .title("TOURGUIDE")
                         .version("0.0.1")
                         .build())
                 .enable(true)
